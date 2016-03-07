@@ -14,6 +14,7 @@ struct Particle {
 		float3 force;
 		float lifespan;
 		float age;
+		float4 color;
 	#endif
 };
 
@@ -40,6 +41,7 @@ struct vs2ps
 {
     float4 position: SV_POSITION;
 	float age : TEXCOORD;
+	float4 color : COLOR;
 };
 
 /* ===================== VERTEX SHADER ===================== */
@@ -54,6 +56,7 @@ vs2ps VS(vsInput input)
 	p.xyz += ParticleBuffer[ii].position;
 	output.position = mul(p,mul(tW,tVP));
 	output.age = ParticleBuffer[ii].age;
+	output.color = ParticleBuffer[ii].color;
 	return output;
 }
 
@@ -61,7 +64,7 @@ vs2ps VS(vsInput input)
 
 float4 PS_COLOR(vs2ps input): SV_Target
 {
-    return cAmb - (input.age / 10);
+    return (cAmb * input.color) - (input.age / 10);
 }
 
 

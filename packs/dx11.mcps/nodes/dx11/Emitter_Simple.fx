@@ -36,7 +36,7 @@ struct csin
 };
 
 [numthreads(XTHREADS, YTHREADS, ZTHREADS)]
-void CSMain(csin input)
+void CS_Main(csin input)
 {
 	
 	if(input.DTID.x >= EmitterSize) return;
@@ -68,11 +68,19 @@ void CSMain(csin input)
 			p.lifespan = LifespanBuffer[particleCounter % size];
 
 			ParticleBuffer[slotIndex] = p;
-			CounterBuffer[0] = particleCounter;
 			IndexBuffer[particleCounter] = slotIndex;
 		}
 	}
-	
 }
 
-technique11 csmain { pass P0{SetComputeShader( CompileShader( cs_5_0, CSMain() ) );} }
+[numthreads(1, 1, 1)]
+void CS_SetCounter(csin input)
+{
+	if (Emit) {
+		uint particleCounter = CounterBuffer.IncrementCounter();
+		CounterBuffer[0] = particleCounter;
+	}
+}
+
+technique11 EmitParticles { pass P0{SetComputeShader( CompileShader( cs_5_0, CS_Main() ) );} }
+technique11 UpdateCounter { pass P0{SetComputeShader( CompileShader( cs_5_0, CS_SetCounter() ) );} }
