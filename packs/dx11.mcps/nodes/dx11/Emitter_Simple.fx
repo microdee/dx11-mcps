@@ -1,7 +1,7 @@
 #include "../fxh/Defines.fxh"
 
 struct Particle {
-	#if defined(COMPOSITESTRUCTAVAILABLE)
+	#if defined(COMPOSITESTRUCT)
   		COMPOSITESTRUCT
  	#else
 		float3 position;
@@ -68,7 +68,7 @@ void CS_Main(csin input)
 			p.lifespan = LifespanBuffer[particleCounter % size];
 
 			ParticleBuffer[slotIndex] = p;
-			IndexBuffer[particleCounter] = slotIndex;
+			IndexBuffer[EMITTEROFFSET + particleCounter] = slotIndex;
 		}
 	}
 }

@@ -103,7 +103,6 @@ namespace DX11.Mcps.Utils
         public List<string> StructureDefinition = new List<string>();
         public int Stride = 0;
 
-        //called when data for any output pin is requested
         public StructHelper(List<string> FDefinition)
         {
            

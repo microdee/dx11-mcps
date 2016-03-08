@@ -223,6 +223,8 @@
    </BOUNDS>
    <PIN pinname="Element Count" visible="1">
    </PIN>
+   <PIN pinname="Defines" visible="1" slicecount="1" values="||">
+   </PIN>
    </NODE>
    <NODE nodename="IOBox (Enumerations)" componentmode="InABox" id="31" systemname="IOBox (Enumerations)">
    <BOUNDS type="Box" left="6720" top="570" width="1590" height="270">
@@ -239,8 +241,6 @@
    </LINKPOINT>
    <LINKPOINT x="6750" y="1135">
    </LINKPOINT>
-   </LINK>
-   <LINK srcnodeid="30" srcpinname="StructureDefinition" dstnodeid="24" dstpinname="Input 2" hiddenwhenlocked="1">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="35" systemname="IOBox (String)">
    <BOUNDS type="Box" left="5250" top="4950" width="1590" height="240">
@@ -339,5 +339,7 @@
    <LINK srcnodeid="36" srcpinname="Y Output Value" dstnodeid="26" dstpinname="Extract">
    </LINK>
    <LINK srcnodeid="26" srcpinname="Variables" dstnodeid="37" dstpinname="Input String" hiddenwhenlocked="1">
+   </LINK>
+   <LINK srcnodeid="30" srcpinname="Defines" dstnodeid="24" dstpinname="Input 2">
    </LINK>
    </PATCH>

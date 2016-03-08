@@ -6,7 +6,7 @@
 #include "../fxh/Defines.fxh"
 
 struct Particle {
-	#if defined(COMPOSITESTRUCTAVAILABLE)
+	#if defined(COMPOSITESTRUCT)
   		COMPOSITESTRUCT
  	#else
 		float3 position;
@@ -14,7 +14,6 @@ struct Particle {
 		float3 force;
 		float lifespan;
 		float age;
-		float4 color;
 	#endif
 };
 
@@ -56,7 +55,13 @@ vs2ps VS(vsInput input)
 	p.xyz += ParticleBuffer[ii].position;
 	output.position = mul(p,mul(tW,tVP));
 	output.age = ParticleBuffer[ii].age;
-	output.color = ParticleBuffer[ii].color;
+
+	#if defined(KNOW_COLOR)
+		output.color = ParticleBuffer[ii].color;
+ 	#else
+		output.color = float4(1,1,1,1);
+	#endif
+	
 	return output;
 }
 
@@ -64,7 +69,7 @@ vs2ps VS(vsInput input)
 
 float4 PS_COLOR(vs2ps input): SV_Target
 {
-    return (cAmb * input.color) - (input.age / 10);
+    return (cAmb * input.color);
 }
 
 

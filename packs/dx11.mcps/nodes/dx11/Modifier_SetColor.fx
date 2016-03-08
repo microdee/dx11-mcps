@@ -1,7 +1,7 @@
 #include "../fxh/Defines.fxh"
 
 struct Particle {
-	#if defined(COMPOSITESTRUCTAVAILABLE)
+	#if defined(COMPOSITESTRUCT)
   		COMPOSITESTRUCT
  	#else
 		float4 color;

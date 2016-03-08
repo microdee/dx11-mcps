@@ -179,6 +179,8 @@
    </PIN>
    <PIN pinname="Element Count" visible="1">
    </PIN>
+   <PIN pinname="Defines" visible="1" slicecount="1" values="||">
+   </PIN>
    </NODE>
    <NODE nodename="IOBox (Enumerations)" componentmode="InABox" id="47" systemname="IOBox (Enumerations)">
    <BOUNDS type="Box" left="9465" top="720" width="1590" height="270">
@@ -193,8 +195,6 @@
    <LINK srcnodeid="47" srcpinname="Output Enum" dstnodeid="46" dstpinname="ParticleSystem" hiddenwhenlocked="1">
    </LINK>
    <LINK srcnodeid="44" srcpinname="Output String" dstnodeid="46" dstpinname="Structure">
-   </LINK>
-   <LINK srcnodeid="46" srcpinname="StructureDefinition" dstnodeid="15" dstpinname="Input 2" hiddenwhenlocked="0">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="48" systemname="IOBox (Value Advanced)">
    <BOUNDS type="Box" left="3525" top="2805" width="795" height="240">
@@ -273,5 +273,7 @@
    <LINK srcnodeid="49" srcpinname="Output String" dstnodeid="43" dstpinname="BufferType">
    </LINK>
    <LINK srcnodeid="50" srcpinname="Output String" dstnodeid="43" dstpinname="BufferName">
+   </LINK>
+   <LINK srcnodeid="46" srcpinname="Defines" dstnodeid="15" dstpinname="Input 2">
    </LINK>
    </PATCH>

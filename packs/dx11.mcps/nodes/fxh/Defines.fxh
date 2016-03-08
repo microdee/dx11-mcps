@@ -1,9 +1,5 @@
 #define DEFINES_FXH
 
-#if !defined(COMPOSITESTRUCT)
-	#define COMPOSITESTRUCT //none
-#endif
-
 // THREAD DEFAULTS
 #if !defined(XTHREADS)
 	#define XTHREADS 1
@@ -15,6 +11,7 @@
 	#define ZTHREADS 1
 #endif
 
+// BUFFER DEFAULTS
 #if !defined(MAXPARTICLECOUNT)
 	#define MAXPARTICLECOUNT 0
 #endif
@@ -23,6 +20,7 @@
 	#define EMITTEROFFSET 0
 #endif
 
+// RENDERSEMANTICS
 cbuffer mcpsUniforms
 {
     float2 mcpsTime : PS_TIME;

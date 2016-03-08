@@ -56,7 +56,7 @@
    <PIN pinname="String" visible="1">
    </PIN>
    </NODE>
-   <BOUNDS type="Window" left="8070" top="4350" width="17700" height="11025">
+   <BOUNDS type="Window" left="7860" top="3150" width="17700" height="11025">
    </BOUNDS>
    <PACK Name="addonpack" Version="34.1.0">
    </PACK>
@@ -349,6 +349,8 @@
    </PIN>
    <PIN pinname="EmitCount" visible="1">
    </PIN>
+   <PIN pinname="Defines" visible="1" slicecount="1" values="||">
+   </PIN>
    </NODE>
    <NODE nodename="IOBox (Enumerations)" componentmode="InABox" id="94" systemname="IOBox (Enumerations)">
    <BOUNDS type="Box" left="11940" top="2115" width="1590" height="270">
@@ -421,8 +423,6 @@
    </PIN>
    </NODE>
    <LINK srcnodeid="98" srcpinname="Output String" dstnodeid="93" dstpinname="Structure">
-   </LINK>
-   <LINK srcnodeid="93" srcpinname="StructureDefinition" dstnodeid="78" dstpinname="Input 2">
    </LINK>
    <NODE systemname="ExtractStruct (DX11.Mcps.Utils)" filename="%VVVV%\packs\dx11.mcps\nodes\modules\Utils\ExtractStruct (DX11.Mcps.Utils).v4p" nodename="ExtractStruct (DX11.Mcps.Utils)" componentmode="Hidden" id="87">
    <BOUNDS type="Node" left="9525" top="5865" width="100" height="100">
@@ -557,5 +557,7 @@
    <LINK srcnodeid="102" srcpinname="Layer Out" dstnodeid="101" dstpinname="Layer 2">
    </LINK>
    <LINK srcnodeid="101" srcpinname="Layer Out" dstnodeid="48" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="93" srcpinname="Defines" dstnodeid="78" dstpinname="Input 2">
    </LINK>
    </PATCH>

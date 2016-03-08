@@ -73,10 +73,30 @@ namespace DX11.Mcps.Utils
                     if (Changed != null) Changed(this, new ParticleSystemRegistryEventArgs(false));
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) { }
+        }
 
+        public void SetDefines(string particleSystemName, string shaderRegisterNodeId, IEnumerable<string> additionalDefines)
+        {
+            if (Instance.ContainsKey(particleSystemName))
+            {
+                Instance[particleSystemName].SetDefines(shaderRegisterNodeId, additionalDefines);
+                if (Changed != null) Changed(this, new ParticleSystemRegistryEventArgs(true));
             }
+        }
+
+        public void RemoveDefines(string shaderRegisterNodeId)
+        {
+            try
+            {
+                ParticleSystemData psd = Instance.First(kvp => kvp.Value.HasShaderNodeId(shaderRegisterNodeId)).Value;
+                if (psd != null)
+                {
+                    psd.RemoveDefines(shaderRegisterNodeId);
+                    if (Changed != null) Changed(this, new ParticleSystemRegistryEventArgs(false));
+                }
+            }
+            catch (Exception){}
         }
 
         public void SetEmitterSize(string particleSystemName, string shaderRegisterNodeId, int emitterSize)
@@ -99,10 +119,7 @@ namespace DX11.Mcps.Utils
                     if (Changed != null) Changed(this, new ParticleSystemRegistryEventArgs(false));
                 }
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
         }
 
         public ParticleSystemData GetByParticleSystemId (string particleSystemRegisterNodeId)
@@ -140,6 +157,7 @@ namespace DX11.Mcps.Utils
     {
         public List<string> ParticleSystemRegisterNodeIds = new List<string>();
         public Dictionary<string, List<string>> ShaderVariables = new Dictionary<string,List<string>>();
+        public Dictionary<string, List<string>> Defines = new Dictionary<string, List<string>>();
         public Dictionary<string, int> EmitterSizes = new Dictionary<string, int>();
         
         public string StructureDefinition { get; protected set; }
@@ -180,6 +198,33 @@ namespace DX11.Mcps.Utils
         public void RemoveShaderVariables (string shaderRegisterNodeId){
             this.ShaderVariables.Remove(shaderRegisterNodeId);
             this.UpdateStructure();
+        }
+
+        public void SetDefines(string shaderRegisterNodeId, IEnumerable<string> additionalDefines)
+        {
+            this.Defines[shaderRegisterNodeId] = additionalDefines.ToList();
+        }
+
+        public void RemoveDefines(string shaderRegisterNodeId)
+        {
+            this.Defines.Remove(shaderRegisterNodeId);
+        }
+
+        public List<string> GetDefines()
+        {
+            List<string> defines = (
+                               from definelist in Defines.Values
+                               from define in definelist
+                               select define
+                           ).Distinct().ToList();
+            return defines;
+        }
+
+        public List<string> GetDefines(string shaderRegisterNodeId)
+        {
+            if (this.Defines.ContainsKey(shaderRegisterNodeId))
+                return this.Defines[shaderRegisterNodeId];
+            else return new List<string>();
         }
 
         public void SetEmitterSize(string shaderRegisterNodeId, int size)

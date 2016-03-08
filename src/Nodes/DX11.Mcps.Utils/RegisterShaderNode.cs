@@ -22,14 +22,17 @@ namespace DX11.Mcps.Utils
         [Input("Structure", DefaultString = "")]
         public IDiffSpread<string> FVariables;
 
+        [Input("Defines")]
+        public IDiffSpread<string> FDefines;
+
         [Input("EmitCount", DefaultValue = 0, IsSingle=true)]
         public IDiffSpread<int> FEmitCount;
 
         [Input("ParticleSystem", EnumName = ParticleSystemRegistry.PARTICLESYSTEM_ENUM, Order = 2, IsSingle = true, DefaultEnumEntry = ParticleSystemRegistry.DEFAULT_ENUM)]
         public IDiffSpread<EnumEntry> FParticleSystemName;
 
-        [Output("StructureDefinition", DefaultString = "", AutoFlush = false, AllowFeedback = true)]
-        public ISpread<string> FStructureDefinition;
+        [Output("Defines", DefaultString = "", AutoFlush = false, AllowFeedback = true)]
+        public ISpread<string> FOutDefines;
 
         [Output("Element Count", DefaultValue = 0, AutoFlush = false, AllowFeedback = true)]
         public ISpread<int> FElementCount;
@@ -54,21 +57,29 @@ namespace DX11.Mcps.Utils
         {
             if (_ParticleSystemChanged)
             {
-                UpdateShaderVariables();
+                UpdateDefines();
                 UpdateEmitterSize();
+                UpdateShaderVariables();
                 _ParticleSystemChanged = false;
             }
 
             if (FParticleSystemName.IsChanged)
             {
-                UpdateShaderVariables();
+                UpdateDefines();
                 UpdateEmitterSize();
+                UpdateShaderVariables();
             }
 
             if (FVariables.IsChanged)
             {
                 SetShaderVariables();
             }
+
+            if (FDefines.IsChanged)
+            {
+                SetDefines();
+            }
+
             if (FEmitCount.IsChanged)
             {
                 SetEmitterSize();
@@ -78,6 +89,8 @@ namespace DX11.Mcps.Utils
         public void Dispose()
         {
             ParticleSystemRegistry.Instance.Changed -= HandleRegistryChange;
+            RemoveDefines();
+            RemoveEmitterSize();
             RemoveShaderVariables();
         }
 
@@ -103,6 +116,24 @@ namespace DX11.Mcps.Utils
         {
             RemoveShaderVariables();
             SetShaderVariables();
+        }
+
+        private void SetDefines()
+        {
+            var particleSystemRegistry = ParticleSystemRegistry.Instance;
+            particleSystemRegistry.SetDefines(FParticleSystemName[0], this.ShaderNodeId, FDefines);
+        }
+
+        private void RemoveDefines()
+        {
+            var particleSystemRegistry = ParticleSystemRegistry.Instance;
+            particleSystemRegistry.RemoveDefines(this.ShaderNodeId);
+        }
+
+        private void UpdateDefines()
+        {
+            RemoveDefines();
+            SetDefines();
         }
 
         private void SetEmitterSize()
@@ -131,18 +162,21 @@ namespace DX11.Mcps.Utils
             var particleSystemData = ParticleSystemRegistry.Instance.GetByShaderId(this.ShaderNodeId);
             if (particleSystemData != null)
             {
-                FStructureDefinition.SliceCount = 3;
-                FStructureDefinition[0] = "COMPOSITESTRUCT=" + particleSystemData.StructureDefinition;
-                FStructureDefinition[1] = "COMPOSITESTRUCTAVAILABLE=1";
-                FStructureDefinition[2] = "MAXPARTICLECOUNT=" + particleSystemData.ElementCount;
+                FOutDefines.SliceCount = 0;
+                FOutDefines.Add("COMPOSITESTRUCT=" + particleSystemData.StructureDefinition);
+                FOutDefines.Add("MAXPARTICLECOUNT=" + particleSystemData.ElementCount);
 
+                foreach (string define in particleSystemData.GetDefines())
+                {
+                    if (define != "") FOutDefines.Add(define);
+                }
+                
                 if (FEmitCount[0] > 0) // this is an emitter, so we output an offset too
                 {
-                    FStructureDefinition.SliceCount = 4;
-                    FStructureDefinition[3] = "EMITTEROFFSET=" + particleSystemData.GetEmitterOffset(this.ShaderNodeId);
+                    FOutDefines.Add("EMITTEROFFSET=" + particleSystemData.GetEmitterOffset(this.ShaderNodeId));
                 }
 
-                FStructureDefinition.Flush();
+                FOutDefines.Flush();
 
                 FElementCount[0] = particleSystemData.ElementCount;
                 FElementCount.Flush();
